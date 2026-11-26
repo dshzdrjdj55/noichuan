@@ -174,14 +174,14 @@ let mus=null,mstep=0,maud=null,mgain=null,bAud=null,cur=null;
 const mvolv=()=>on()?($('#mvol').value/100)*($('#vol').value/100)*(G.duck?.3:1):0;
 function mg(){if(!ac)return null;if(!mgain){mgain=ac.createGain();mgain.connect(master)}mgain.gain.value=$('#mvol').value/100*(G.duck?.3:1);if(cur)cur.volume=Math.min(1,mvolv());return mgain}
 function pluck(f,d,v,dest){const o=ac.createOscillator(),g=ac.createGain(),l=ac.createOscillator(),lg=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.setValueAtTime(f*.95,t);o.frequency.linearRampToValueAtTime(f,t+.07);l.frequency.value=5.5;lg.gain.value=f*.012;l.connect(lg).connect(o.frequency);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(dest);o.start(t);l.start(t);o.stop(t+d+.02);l.stop(t+d+.02)}
-function startMusic(){stopMusic();G.duck=false;let src=$('#music').value;if(src==='off')return;
+function startMusic(){stopMusic();G.duck=false;let src=$('#music').value;if(qi===1&&q2aud&&$('#qon').checked){cur=q2aud;q2run=true;cur.currentTime=0;mg();cur.play().catch(()=>{});return}if(src==='off')return;
   if(src==='ngvnd'){if(!bAud){bAud=new Audio('nguoi-giao-vien-nhan-dan.mp4');bAud.loop=true}cur=bAud;cur.currentTime=0;mg();cur.play().catch(()=>{});return}
   if(src==='file'){if(maud){cur=maud;maud.currentTime=0;mg();maud.play().catch(()=>{});return}}
   if(!ac)return;mstep=0;const tick=()=>{const d=mg(),f=MEL[mstep%32];if(f)pluck(f,.55,.13,d);if(mstep%8==0)pluck(BASS[(mstep/8|0)%4],1.8,.17,d);if(mstep%2==0)tone(950,.05,'sine',.05,600,0,d);mstep++;mus=setTimeout(tick,G.phase==='unload'?230:290)};tick()}
-function stopMusic(){clearTimeout(mus);mus=null;if(maud)maud.pause();if(bAud)bAud.pause();cur=null}
-let q2aud=null;
+function stopMusic(){clearTimeout(mus);mus=null;if(maud)maud.pause();if(bAud)bAud.pause();if(q2aud)q2aud.pause();cur=null}
+let q2aud=null,q2run=false;
 function stopQ2(){if(q2aud)q2aud.pause()}
-function playQ2(){if(!q2aud||!on())return;stopMusic();q2aud.currentTime=0;q2aud.volume=Math.min(1,($('#mvol').value/100)*($('#vol').value/100)*1.4);q2aud.play().catch(()=>{})}
+function playQ2(){if(!q2aud||!on())return;stopMusic();if(!q2run)q2aud.currentTime=0;q2run=false;q2aud.volume=Math.min(1,($('#mvol').value/100)*($('#vol').value/100)*1.4);q2aud.play().catch(()=>{})}
 function duckMusic(){G.duck=true;mg()}
 let vv=null;
 function pickVoice(){try{vv=speechSynthesis.getVoices().find(v=>/^vi/i.test(v.lang))||null;$('#vnote').textContent=vv?'Giọng: '+vv.name:'Máy này chưa có giọng tiếng Việt nên sẽ không đọc to.'}catch(e){$('#vnote').textContent='Trình duyệt không hỗ trợ đọc to.'}}
