@@ -196,7 +196,7 @@ const QS=[
  {q:'In Japan, a 45° bow (ojigi) shows…',o:['a casual hello to friends','polite respect to a customer','deep respect or a serious apology','that you are tired'],a:2,x:'15° is a casual hello, 30° is polite respect, and 45° shows deep respect or a serious apology. The deeper the bow, the greater the respect.'},
  {q:'In 2013, why did many Koreans think Bill Gates\u2019 handshake with President Park Geun-hye was disrespectful?',o:['He bowed too low','His other hand was in his pocket','He shook hands with both hands','He crossed his legs'],a:1,x:'He shook hands with one hand while the other was in his pocket. In Korea, a respectful handshake uses both hands, or one hand supports the other arm.'},
  {q:'Geert Hofstede\u2019s term for how posture shows who is older or higher in rank is…',o:['kinesics','power distance','silent language','ojigi'],a:1,x:'Power distance: in cultures like Vietnam, Japan and Korea, younger people bow lower and stand up when an older person comes in. (Kinesics is the study of body language.)'}];
-let qi=+(store.get('do-q')||0)%QS.length;
+let qi=0;
 function chime(ok){if(!ac)return;if(ok)[784,988,1319].forEach((f,i)=>tone(f,.25,'triangle',.16,0,i*.1));else{tone(196,.45,'sawtooth',.12,150);tone(185,.45,'square',.06,140)}}
 function showQ(){const Q=QS[qi];if(qi===1)playQ2();else stopQ2();$('#quiz').hidden=false;$('#qn').textContent=`Câu hỏi ${qi+1}/${QS.length}`;$('#qp').textContent=Q.q;$('#qx').innerHTML='';
   $('#opts').innerHTML=Q.o.map((t,i)=>`<button type="button" data-i="${i}"><b>${'ABCD'[i]}</b><span>${esc(t)}</span></button>`).join('');
